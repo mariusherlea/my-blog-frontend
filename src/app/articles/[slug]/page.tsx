@@ -1,43 +1,38 @@
-//src/app/articles/[slug]/page.tsx
 import { notFound } from "next/navigation";
-import { ArticleContent } from "@/lib/article";
 import { getArticleBySlug } from "@/lib/api";
+import { ArticleContent } from "@/lib/article";
 
 export default async function ArticlePage({
   params,
 }: {
   params: { slug: string };
 }) {
-  const article = await getArticleBySlug(params.slug);
+  const { slug } = params;
+  const article = await getArticleBySlug(slug);
 
-  if (!article) {
-    notFound();
-  }
-
-  const { title, content, publishedAt, cover } = article;
+  if (!article) return notFound();
 
   return (
-    <article className="max-w-3xl mx-auto px-4 py-10">
-      <h1 className="text-4xl font-bold mb-6">{title}</h1>
-
-      {cover?.data && (
-        <img
-          src={`http://localhost:1337${cover.data.attributes.url}`}
-          alt={title}
-          className="w-full max-h-96 object-cover rounded-lg mb-6"
-        />
-      )}
-
-      <p className="text-gray-500 mb-6">
+    <article>
+      <h1>{article.title}</h1>
+      <p>
         Publicat la:{" "}
-        {new Date(publishedAt).toLocaleDateString("ro-RO", {
-          day: "2-digit",
-          month: "long",
+        {new Date(article.publishedAt).toLocaleDateString("ro-RO", {
           year: "numeric",
+          month: "long",
+          day: "numeric",
         })}
       </p>
 
-      <ArticleContent content={content} />
+      {article.cover && (
+        <img
+          src={article.cover.url}
+          alt={article.cover.alternativeText || article.title}
+          style={{ maxWidth: "100%", height: "auto" }}
+        />
+      )}
+
+      <ArticleContent content={article.content} />
     </article>
   );
 }

@@ -1,10 +1,30 @@
-//lib/article.ts
-import { PortableText } from "@portabletext/react";
+type TextChild = {
+  type: "text";
+  text: string;
+};
+
+type ParagraphBlock = {
+  type: "paragraph";
+  children: TextChild[];
+};
 
 type ArticleContentProps = {
-  content: any;
+  content: ParagraphBlock[];
 };
 
 export function ArticleContent({ content }: ArticleContentProps) {
-  return <PortableText value={content} />;
+  return (
+    <div>
+      {content.map((block, idx) => {
+        if (block.type === "paragraph") {
+          return (
+            <p key={idx}>
+              {block.children.map((child) => child.text).join("")}
+            </p>
+          );
+        }
+        return null;
+      })}
+    </div>
+  );
 }
