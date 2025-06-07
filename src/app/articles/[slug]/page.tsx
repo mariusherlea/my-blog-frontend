@@ -1,20 +1,22 @@
 // src/app/articles/[slug]/page.tsx
+
 import { notFound } from "next/navigation";
 import { getArticleBySlug } from "@/lib/api";
-import { ArticleContent } from "@/lib/article";
+import { ArticleContent } from "../../../lib/article"; // importă componenta
 
-export default async function ArticlePage({
-  params,
-}: {
+type Props = {
   params: { slug: string };
-}) {
+};
+
+export default async function ArticlePage({ params }: Props) {
   const article = await getArticleBySlug(params.slug);
+
   if (!article) notFound();
 
   return (
     <article className="max-w-3xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-4">{article.title}</h1>
-      <p className="text-sm text-gray-500 mb-6">
+      <h1 className="text-4xl font-bold mb-4">{article.title}</h1>
+      <p className="text-gray-500 mb-6">
         Publicat la:{" "}
         {new Date(article.publishedAt).toLocaleDateString("ro-RO", {
           year: "numeric",
@@ -26,11 +28,12 @@ export default async function ArticlePage({
       {article.cover && (
         <img
           src={`http://localhost:1337${article.cover.url}`}
-          alt={article.cover.alternativeText || article.title}
-          className="w-full h-auto rounded-xl mb-6"
+          alt={`Cover pentru ${article.title}`}
+          className="w-full max-h-96 object-cover rounded-lg mb-8"
         />
       )}
 
+      {/* Folosește ArticleContent pentru a reda conținutul structurat */}
       <ArticleContent content={article.content} />
     </article>
   );
