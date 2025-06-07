@@ -1,13 +1,12 @@
 // src/app/articles/page.tsx
-import { getArticles } from "@/lib/api";
 import Link from "next/link";
-import PaginationControls from "@/app/components/PaginationControls";
+import { getArticles } from "@/lib/api";
 
-export default async function ArticlesPage({
-  searchParams,
-}: {
+type Props = {
   searchParams?: { page?: string };
-}) {
+};
+
+export default async function ArticlesPage({ searchParams }: Props) {
   const currentPage = parseInt(searchParams?.page || "1", 10);
   const pageSize = 6;
 
@@ -15,10 +14,10 @@ export default async function ArticlesPage({
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8 text-center">Toate articolele</h1>
+      <h1 className="text-3xl font-bold mb-8 text-center">Articole</h1>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        {articles.map((article: any) => (
+        {articles.map((article) => (
           <Link
             key={article.id}
             href={`/articles/${article.slug}`}
@@ -27,7 +26,7 @@ export default async function ArticlesPage({
             {article.cover && (
               <img
                 src={`http://localhost:1337${article.cover.url}`}
-                alt={`cover for ${article.title}`}
+                alt={`Cover pentru ${article.title}`}
                 className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
               />
             )}
@@ -59,6 +58,41 @@ export default async function ArticlesPage({
         currentPage={pagination.page}
         totalPages={pagination.pageCount}
       />
+    </div>
+  );
+}
+
+// Controale simple pentru paginare:
+function PaginationControls({
+  currentPage,
+  totalPages,
+}: {
+  currentPage: number;
+  totalPages: number;
+}) {
+  return (
+    <div className="mt-8 flex justify-center gap-4">
+      {currentPage > 1 && (
+        <Link
+          href={`/articles?page=${currentPage - 1}`}
+          className="px-4 py-2 border rounded hover:bg-gray-100"
+        >
+          « Anterior
+        </Link>
+      )}
+
+      <span className="px-4 py-2 border rounded bg-blue-100 font-semibold">
+        Pagina {currentPage} din {totalPages}
+      </span>
+
+      {currentPage < totalPages && (
+        <Link
+          href={`/articles?page=${currentPage + 1}`}
+          className="px-4 py-2 border rounded hover:bg-gray-100"
+        >
+          Următor →
+        </Link>
+      )}
     </div>
   );
 }

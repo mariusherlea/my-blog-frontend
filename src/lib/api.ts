@@ -1,9 +1,14 @@
 const API_URL = "http://localhost:1337/api";
 
-export const getArticles = async (page: number = 1, pageSize: number = 6) => {
+export const getArticles = async (page = 1, pageSize = 5) => {
+  // const res = await fetch(
+  //   `${API_URL}/articles?pagination[page]=${page}&pagination[pageSize]=${pageSize}&populate=cover`,
+  //   { cache: "no-store" }
+  // );
+
   const res = await fetch(
-    `${API_URL}/articles?pagination[page]=${page}&pagination[pageSize]=${pageSize}&populate=cover`,
-    { cache: "no-store" }
+    `${API_URL}/articles?populate=cover&pagination[page]=${page}&pagination[pageSize]=${pageSize}`,
+    { next: { revalidate: 60 } }
   );
 
   const data = await res.json();
