@@ -1,20 +1,27 @@
-//src/app/page.tsx
+// src/app/articles/page.tsx
 import { getArticles } from "@/lib/api";
 import Link from "next/link";
+import { PaginationControls } from "@/app/components/PaginationControls";
+export default async function ArticlesPage({
+  searchParams,
+}: {
+  searchParams?: { page?: string };
+}) {
+  const currentPage = parseInt(searchParams?.page || "1", 10);
+  const pageSize = 6;
 
-export default async function Home() {
-  const articles = await getArticles();
+  const { articles, pagination } = await getArticles(currentPage, pageSize);
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8 text-center">Blog</h1>
+      <h1 className="text-3xl font-bold mb-8 text-center">Toate articolele</h1>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {articles.map((article: any) => (
           <Link
             key={article.id}
             href={`/articles/${article.slug}`}
-            className="group block border rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 bg-blue-400"
+            className="group block border rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 bg-white"
           >
             {article.cover && (
               <img
@@ -46,6 +53,11 @@ export default async function Home() {
           </Link>
         ))}
       </div>
+
+      <PaginationControls
+        currentPage={pagination.page}
+        totalPages={pagination.pageCount}
+      />
     </div>
   );
 }
