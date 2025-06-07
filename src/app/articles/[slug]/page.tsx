@@ -7,10 +7,9 @@ export default async function ArticlePage({
 }: {
   params: { slug: string };
 }) {
-  const { slug } = params;
-  const article = await getArticleBySlug(slug);
+  const article = await getArticleBySlug(params.slug);
 
-  if (!article) return notFound();
+  if (!article) notFound();
 
   return (
     <article>
@@ -23,14 +22,6 @@ export default async function ArticlePage({
           day: "numeric",
         })}
       </p>
-
-      {article.cover && (
-        <img
-          src={article.cover.url}
-          alt={article.cover.alternativeText || article.title}
-          style={{ maxWidth: "100%", height: "auto" }}
-        />
-      )}
 
       <ArticleContent content={article.content} />
     </article>

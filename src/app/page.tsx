@@ -14,7 +14,7 @@ export default async function Home() {
           <Link
             key={article.id}
             href={`/articles/${article.slug}`}
-            className="group block border rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 bg-green-400"
+            className="group block border rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 bg-blue-400"
           >
             {article.cover && (
               <img
