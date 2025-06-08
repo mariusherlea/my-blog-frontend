@@ -4,6 +4,18 @@ import { notFound } from "next/navigation";
 import { getArticleBySlug } from "@/lib/api";
 import { ArticleContent } from "../../../lib/article"; // importă componenta
 
+export async function generateMetadata({ params }) {
+  const article = await getArticleBySlug(params.slug);
+
+  return {
+    title: article.title,
+    description: article.excerpt,
+    openGraph: {
+      images: [`http://localhost:1337${article.cover?.url}`],
+    },
+  };
+}
+
 type Props = {
   params: { slug: string };
 };
