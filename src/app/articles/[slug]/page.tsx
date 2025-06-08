@@ -4,21 +4,39 @@ import { notFound } from "next/navigation";
 import { getArticleBySlug } from "@/lib/api";
 import { ArticleContent } from "../../../lib/article"; // importă componenta
 
-export async function generateMetadata({ params }) {
-  const article = await getArticleBySlug(params.slug);
-
-  return {
-    title: article.title,
-    description: article.excerpt,
-    openGraph: {
-      images: [`http://localhost:1337${article.cover?.url}`],
-    },
-  };
-}
-
 type Props = {
   params: { slug: string };
 };
+
+// 👇 SEO dinamic
+export async function generateMetadata({
+  params,
+}: {
+  params: { slug: string };
+}): Promise<Metadata> {
+  const article = await getArticleBySlug(params.slug);
+
+  if (!article) return { title: "Articol inexistent" };
+
+  const description =
+    typeof article.content === "string"
+      ? article.content.slice(0, 150) + "..."
+      : "Citește articolul complet.";
+
+  return {
+    title: article.title,
+    description,
+    openGraph: {
+      title: article.title,
+      description,
+      type: "article",
+      url: `https://exemplu.ro/articles/${params.slug}`,
+      images: article.cover
+        ? [`http://localhost:1337${article.cover.url}`]
+        : undefined,
+    },
+  };
+}
 
 export default async function ArticlePage({ params }: Props) {
   const article = await getArticleBySlug(params.slug);
