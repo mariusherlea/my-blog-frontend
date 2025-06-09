@@ -1,11 +1,7 @@
+//src/lib/api.ts
 const API_URL = "http://localhost:1337/api";
 
 export const getArticles = async (page = 1, pageSize = 5) => {
-  // const res = await fetch(
-  //   `${API_URL}/articles?pagination[page]=${page}&pagination[pageSize]=${pageSize}&populate=cover`,
-  //   { cache: "no-store" }
-  // );
-
   const res = await fetch(
     `${API_URL}/articles?populate=cover&pagination[page]=${page}&pagination[pageSize]=${pageSize}`,
     { next: { revalidate: 60 } }
@@ -25,6 +21,7 @@ export const getArticles = async (page = 1, pageSize = 5) => {
     pagination: data.meta.pagination,
   };
 };
+
 export async function getArticleBySlug(slug: string) {
   const res = await fetch(
     `${API_URL}/articles?filters[slug][$eq]=${slug}&populate=cover`,
@@ -42,4 +39,18 @@ export async function getArticleBySlug(slug: string) {
     cover: item.cover || null,
     publishedAt: item.publishedAt || item.createdAt,
   };
+}
+
+export async function getCommentsByArticle(slug: string) {
+  const res = await fetch(
+    `${API_URL}/comments?filters[article][slug][$eq]=${slug}&filters[approved][$eq]=true&populate=article`,
+    { next: { revalidate: 60 } }
+  );
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch comments");
+  }
+
+  const data = await res.json();
+  return data.data;
 }
