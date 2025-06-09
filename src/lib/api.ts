@@ -54,3 +54,33 @@ export async function getCommentsByArticle(slug: string) {
   const data = await res.json();
   return data.data;
 }
+
+export async function getUnapprovedComments() {
+  const res = await fetch(
+    `http://localhost:1337/api/comments?filters[approved][$eq]=false&populate=article`,
+    {
+      cache: "no-store", // mereu proaspăt
+    }
+  );
+
+  const data = await res.json();
+  return data.data;
+}
+
+export async function approveComment(id: number) {
+  const res = await fetch(`http://localhost:1337/api/comments/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.STRAPI_ADMIN_TOKEN}`, // token secret
+    },
+    body: JSON.stringify({
+      data: {
+        approved: true,
+      },
+    }),
+  });
+
+  if (!res.ok) throw new Error("Aprobarea a eșuat");
+  return res.json();
+}

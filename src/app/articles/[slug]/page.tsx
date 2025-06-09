@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { getArticleBySlug } from "@/lib/api";
 import { ArticleContent } from "../../../lib/article";
 import { getCommentsByArticle } from "../../../lib/api";
+import CommentForm from "../../components/CommentForm";
 
 type Props = {
   params: { slug: string };
@@ -89,6 +90,8 @@ export default async function ArticlePage({ params }: Props) {
             ))}
           </ul>
         )}
+        {/* ✅ Formular de comentarii */}
+        <CommentForm articleId={article.id} />
       </section>
     </article>
   );
