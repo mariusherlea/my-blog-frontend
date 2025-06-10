@@ -79,10 +79,10 @@ export default async function ArticlePage({ params }: Props) {
             {comments.map((comment) => (
               <li
                 key={comment.id}
-                className="border p-4 rounded-md bg-white shadow-sm"
+                className="border p-4 rounded-md bg-green-300 shadow-sm"
               >
-                <div className="font-semibold">{comment.name}</div>
-                <p className="text-sm text-gray-700 mt-1">{comment.text}</p>
+                <div className="font-semibold text-blue-400">{comment.authorName}</div>
+                <p className="text-sm text-gray-700 mt-1">{comment.content}</p>
                 <div className="text-xs text-gray-400 mt-2">
                   {new Date(comment.createdAt).toLocaleString("ro-RO")}
                 </div>

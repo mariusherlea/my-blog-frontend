@@ -1,66 +1,56 @@
-// components/CommentForm.tsx
 "use client";
-
 import { useState } from "react";
+import { postComment } from "@/lib/api";
 
-type Props = {
+type CommentFormProps = {
   articleId: number;
 };
 
-export default function CommentForm({ articleId }: Props) {
-  const [author, setAuthor] = useState("");
+export default function CommentForm({ articleId }: CommentFormProps) {
   const [content, setContent] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [authorName, setAuthorName] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const res = await fetch("http://localhost:1337/api/comments", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        data: {
-          author,
-          content,
-          article: articleId,
-        },
-      }),
-    });
+    if (!authorName.trim() || !content.trim()) {
+      setError("Numele și comentariul sunt obligatorii");
+      return;
+    }
 
-    if (res.ok) {
-      setAuthor("");
+    try {
+      await postComment(articleId, content.trim(), authorName.trim());
+      setSuccess(true);
+      setError(null);
       setContent("");
-      alert("Comentariu trimis!");
-    } else {
-      alert("Eroare la trimitere.");
+      setAuthorName("");
+    } catch (err) {
+      setError("Eroare la trimiterea comentariului");
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 mt-8">
+    <form onSubmit={handleSubmit} className="mt-4">
       <input
         type="text"
+        value={authorName}
+        onChange={(e) => setAuthorName(e.target.value)}
         placeholder="Numele tău"
-        value={author}
-        onChange={(e) => setAuthor(e.target.value)}
-        className="border rounded px-4 py-2 w-full"
-        required
+        className="w-full p-2 border rounded mb-2"
       />
       <textarea
-        placeholder="Comentariul tău"
+        rows={4}
         value={content}
         onChange={(e) => setContent(e.target.value)}
-        className="border rounded px-4 py-2 w-full"
-        required
+        placeholder="Scrie comentariul tău aici..."
+        className="w-full p-2 border rounded"
       />
-      <button
-        type="submit"
-        disabled={loading}
-        className="bg-blue-600 text-white px-4 py-2 rounded"
-      >
-        {loading ? "Se trimite..." : "Trimite comentariul"}
+      {error && <p className="text-red-500 mt-2">{error}</p>}
+      {success && <p className="text-green-600 mt-2">Comentariul a fost trimis spre aprobare!</p>}
+      <button type="submit" className="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+        Trimite comentariul
       </button>
     </form>
   );

@@ -52,8 +52,16 @@ export async function getCommentsByArticle(slug: string) {
   }
 
   const data = await res.json();
-  return data.data;
+
+  return data.data.map((item: any) => ({
+    id: item.id,
+    content: item.content,
+    authorName: item.authorName,
+    createdAt: item.createdAt,
+  }));
 }
+
+
 
 export async function getUnapprovedComments() {
   const res = await fetch(
@@ -82,5 +90,28 @@ export async function approveComment(id: number) {
   });
 
   if (!res.ok) throw new Error("Aprobarea a eșuat");
+  return res.json();
+}
+
+export async function postComment(articleId: number, content: string, authorName: string) {
+  const res = await fetch(`${API_URL}/comments`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      data: {
+        content,
+        authorName,
+        article: articleId,
+        approved: false,
+      },
+    }),
+  });
+
+  if (!res.ok) {
+    throw new Error("Failed to post comment");
+  }
+
   return res.json();
 }
