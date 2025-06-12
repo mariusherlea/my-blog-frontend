@@ -1,14 +1,10 @@
 //src/lib/api.ts
 
-
-const API_URL = "http://localhost:1337/api";
-
-export const getArticles = async (page = 1, pageSize = 5) => {
+export async function getArticles(page = 1, pageSize = 6) {
   const res = await fetch(
-    `${API_URL}/articles?populate=cover&pagination[page]=${page}&pagination[pageSize]=${pageSize}`,
-    { next: { revalidate: 60 } }
+    `http://localhost:1337/api/articles?populate=cover&pagination[page]=${page}&pagination[pageSize]=${pageSize}`
   );
-
+  if (!res.ok) throw new Error("Eroare la preluarea articolelor");
   const data = await res.json();
 
   return {
@@ -17,139 +13,44 @@ export const getArticles = async (page = 1, pageSize = 5) => {
       title: item.title,
       slug: item.slug,
       excerpt: item.excerpt,
-      cover: item.cover || null,
+      cover: item.cover ? {
+        url: item.cover.data.attributes.url,
+        
+      } : null,
       publishedAt: item.publishedAt || item.createdAt,
     })),
     pagination: data.meta.pagination,
   };
-};
+}
 
-
-// export async function getArticleBySlug(slug: string) {
-//   const res = await fetch(
-//     `${API_URL}/articles?filters[slug][$eq]=${slug}&populate=cover`,
-//     { next: { revalidate: 60 } }
-//   );
-//   const data = await res.json();
-
-//   if (!data.data || data.data.length === 0) return null;
-//   const item = data.data[0];
-
-//   return {
-//     id: item.id, // <- aici este cheia
-//     title: item.title,
-//     slug: item.slug,
-//     content: item.content,
-//     cover: item.cover || null,
-//     publishedAt: item.publishedAt || item.createdAt,
-//   };
-// }
 
 export async function getArticleBySlug(slug: string) {
-  const res = await fetch(
-    `${API_URL}/articles?filters[slug][$eq]=${slug}&populate=cover`,
-    { cache: "no-store" } // 👈 dezactivăm cache-ul pentru debugging
-  );
-
-  const data = await res.json();
-  console.log("Rezultat din getArticleBySlug", JSON.stringify(data, null, 2));
-
-  if (!data.data || data.data.length === 0) return null;
-  const item = data.data[0];
-
-  return {
-    id: item.id,
-    title: item.title,
-    slug: item.slug,
-    content: item.content,
-    cover: item.cover || null,
-    publishedAt: item.publishedAt || item.createdAt,
-  };
+  const res = await fetch(`http://localhost:1337/api/articles?filters[slug][$eq]=${slug}&populate=*`);
+  if (!res.ok) throw new Error("Eroare la preluarea articolului");
+  return await res.json();
 }
-
 
 export async function getCommentsByArticle(slug: string) {
-  const res = await fetch(
-    `${API_URL}/comments?filters[article][slug][$eq]=${slug}&filters[approved][$eq]=true&populate=article`,
-    { next: { revalidate: 60 } }
-  );
-
-  if (!res.ok) {
-    throw new Error("Failed to fetch comments");
-  }
-
-  const data = await res.json();
-
-  return data.data.map((item: any) => ({
-    id: item.id,
-    content: item.content,
-    authorName: item.authorName,
-    createdAt: item.createdAt,
-  }));
+  const res = await fetch(`http://localhost:1337/api/comments?filters[article][slug][$eq]=${slug}&populate=*`);
+  if (!res.ok) throw new Error("Eroare la preluarea comentariilor");
+  return await res.json();
 }
 
-
-
-export async function getUnapprovedComments() {
-  const res = await fetch(
-    `http://localhost:1337/api/comments?filters[approved][$eq]=false&populate=article`,
-    {
-      cache: "no-store", // mereu proaspăt
-    }
-  );
-
-  const data = await res.json();
-  return data.data;
-}
-
-export async function approveComment(id: number) {
-  const res = await fetch(`http://localhost:1337/api/comments/${id}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${process.env.STRAPI_ADMIN_TOKEN}`, // token secret
-    },
+export async function postComment(articleId: number, content: string, authorName: string) {
+  const res = await fetch("http://localhost:1337/api/comments", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       data: {
-        approved: true,
+        content,
+        authorName,
+        approved: false,
+        article: articleId,
       },
     }),
   });
 
-  if (!res.ok) throw new Error("Aprobarea a eșuat");
-  return res.json();
-}
-
-
-export async function postComment(articleId: number, content: string, authorName: string) {
-  const payload = {
-    data: {
-      content,
-      authorName,
-      approved: false,
-      article: articleId,
-    },
-  };
-
-  console.log("🚀 Payload trimis la Strapi:", JSON.stringify(payload, null, 2));
-
-  const res = await fetch("http://localhost:1337/api/comments", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(payload),
-  });
-
-  console.log("Trimitem date:", {
-    content,
-    authorName,
-    article: articleId,
-  });
-
   if (!res.ok) {
-    const errorBody = await res.json();
-    console.error("❌ Strapi response:", errorBody);
     throw new Error("Eroare la trimiterea comentariului");
   }
 

@@ -29,11 +29,11 @@ export default function CommentForm({ articleId }: CommentFormProps) {
       setError(null);
       setContent("");
       setAuthorName("");
-    } catch (err) {
+    } catch {
       setError("Eroare la trimiterea comentariului");
     }
   };
-console.log('Article id din coment form',articleId)
+
   return (
     <form onSubmit={handleSubmit} className="mt-4">
       <input
@@ -52,9 +52,13 @@ console.log('Article id din coment form',articleId)
       />
       {error && <p className="text-red-500 mt-2">{error}</p>}
       {success && <p className="text-green-600 mt-2">Comentariul a fost trimis spre aprobare!</p>}
-      <button type="submit" className="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+      <button
+        type="submit"
+        className="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+      >
         Trimite comentariul
       </button>
     </form>
   );
 }
+
