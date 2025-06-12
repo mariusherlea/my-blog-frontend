@@ -1,3 +1,6 @@
+//src/app/components/CommentForm.tsx
+
+
 "use client";
 import { useState } from "react";
 import { postComment } from "@/lib/api";
@@ -30,7 +33,7 @@ export default function CommentForm({ articleId }: CommentFormProps) {
       setError("Eroare la trimiterea comentariului");
     }
   };
-
+console.log('Article id din coment form',articleId)
   return (
     <form onSubmit={handleSubmit} className="mt-4">
       <input
