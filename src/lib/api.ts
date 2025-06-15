@@ -13,16 +13,12 @@ export async function getArticles(page = 1, pageSize = 6) {
       title: item.title,
       slug: item.slug,
       excerpt: item.excerpt,
-      cover: item.cover ? {
-        url: item.cover.data.attributes.url,
-        
-      } : null,
+      cover: item.cover || null,
       publishedAt: item.publishedAt || item.createdAt,
     })),
     pagination: data.meta.pagination,
   };
 }
-
 
 export async function getArticleBySlug(slug: string) {
   const res = await fetch(`http://localhost:1337/api/articles?filters[slug][$eq]=${slug}&populate=*`);
