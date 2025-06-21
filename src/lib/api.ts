@@ -27,7 +27,9 @@ export async function getArticleBySlug(slug: string) {
 }
 
 export async function getCommentsByArticle(slug: string) {
-  const res = await fetch(`http://localhost:1337/api/comments?filters[article][slug][$eq]=${slug}&populate=*`);
+  // const res = await fetch(`http://localhost:1337/api/comments?filters[article][slug][$eq]=${slug}&populate=*`);
+  const res = await fetch(`http://localhost:1337/api/comments?filters[article][slug][$eq]=${slug}&filters[approved][$eq]=true&populate=*`);
+  
   if (!res.ok) throw new Error("Eroare la preluarea comentariilor");
   return await res.json();
 }
