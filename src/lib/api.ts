@@ -56,3 +56,71 @@ export async function postComment(articleId: number, content: string, authorName
 }
 
 
+export async function getAllComments() {
+  const res = await fetch(`http://localhost:1337/api/comments?populate=article`);
+  if (!res.ok) throw new Error("Eroare la preluarea comentariilor");
+
+  const data = await res.json();
+
+  return data.data.map((item: any) => ({
+    id: item.id,
+    content: item.content,
+    authorName: item.authorName,
+    approved: item.approved,
+    articleTitle: item.article?.title || "necunoscut",
+  }));
+}
+
+
+
+// Aprobare comentariu
+export async function approveComment(id: number) {
+  const res = await fetch(`http://localhost:1337/api/comments/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      data: {
+        approved: true,
+      },
+    }),
+  });
+
+  if (res.status === 404) {
+    console.warn(`Comentariul cu ID ${id} nu a fost găsit (404).`);
+    return { status: "not_found", id };
+  }
+
+  if (!res.ok) {
+    throw new Error("Eroare la aprobarea comentariului");
+  }
+
+  return await res.json();
+}
+
+
+// Ștergere comentariu
+export async function deleteComment(id: number) {
+  const res = await fetch(`http://localhost:1337/api/comments/${id}`, {
+    method: "DELETE",
+  });
+
+  if (res.status === 404) {
+    console.warn(`Comentariul cu ID ${id} nu a fost găsit (404) la ștergere.`);
+    return { status: "not_found", id };
+  }
+
+  if (!res.ok) {
+    throw new Error("Eroare la ștergerea comentariului");
+  }
+
+  return await res.json();
+}
+
+
+
+export async function getUnapprovedComments() {
+  const res = await fetch("http://localhost:1337/api/comments?filters[approved][$eq]=false&populate=article");
+  if (!res.ok) throw new Error("Eroare la preluarea comentariilor neaprobate");
+  return await res.json();
+}
+
