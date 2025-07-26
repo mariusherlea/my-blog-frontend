@@ -2,6 +2,7 @@
 import { getArticles } from "@/lib/api";
 import Link from "next/link";
 import PaginationControls from "@/app/components/PaginationControls";
+import SubscribeForm from "./components/SubscribeForm";
 
 export default async function ArticlesPage({
   searchParams,
@@ -59,6 +60,11 @@ export default async function ArticlesPage({
         currentPage={pagination.page}
         totalPages={pagination.pageCount}
       />
+       <main className="space-y-8 p-6">
+      <h1 className="text-3xl font-bold">Bine ai venit pe blog!</h1>
+      <p>Primește notificări pe email despre cele mai noi articole.</p>
+      <SubscribeForm />
+    </main>
     </div>
   );
 }

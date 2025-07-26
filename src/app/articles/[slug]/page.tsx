@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { getArticleBySlug, getCommentsByArticle } from "@/lib/api";
 import ArticleContent from "../../components/ArticleContent"; // asigură-te că există
 import CommentForm from "../../components/CommentForm";
+import SubscribeForm from "@/app/components/SubscribeForm";
 
 type Props = {
   params: { slug: string };
@@ -62,6 +63,11 @@ export default async function ArticlePage({ params }: Props) {
 
         <CommentForm articleId={article.id} />
       </section>
+       <main className="space-y-8 p-6">
+      <h1 className="text-3xl font-bold">Bine ai venit pe blog!</h1>
+      <p>Primește notificări pe email despre cele mai noi articole.</p>
+      <SubscribeForm />
+    </main>
     </article>
   );
 }
