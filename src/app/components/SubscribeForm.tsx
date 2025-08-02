@@ -6,9 +6,13 @@ export default function SubscribeForm() {
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [message, setMessage] = useState('');
+  const [honeypot, setHoneypot] = useState(''); // honeypot
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (honeypot) return; // Bot detected
+
     setStatus('loading');
     setMessage('');
 
@@ -51,6 +55,19 @@ export default function SubscribeForm() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
+
+{/* Honeypot - invizibil pentru oameni */}
+      <input
+        type="text"
+        value={honeypot}
+        onChange={(e) => setHoneypot(e.target.value)}
+        style={{ display: 'none' }}
+        aria-hidden="true"
+        tabIndex={-1}
+        autoComplete="off"
+        name="website"
+      />
+
       </label>
       <button
         type="submit"
