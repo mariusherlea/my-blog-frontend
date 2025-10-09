@@ -4,11 +4,10 @@ import Link from "next/link";
 import PaginationControls from "@/app/components/PaginationControls";
 import SubscribeForm from "./components/SubscribeForm";
 
-export default async function ArticlesPage({
-  searchParams,
-}: {
-  searchParams?: { page?: string };
+export default async function ArticlesPage(props: {
+  searchParams: Promise<{ page?: string }>;
 }) {
+  const searchParams = await props.searchParams;
   const currentPage = parseInt(searchParams?.page || "1", 10);
   const pageSize = 6;
 
@@ -60,11 +59,11 @@ export default async function ArticlesPage({
         currentPage={pagination.page}
         totalPages={pagination.pageCount}
       />
-       <main className="space-y-8 p-6">
-      <h1 className="text-3xl font-bold">Bine ai venit pe blog!</h1>
-      <p>Primește notificări pe email despre cele mai noi articole.</p>
-      <SubscribeForm />
-    </main>
+      <main className="space-y-8 p-6">
+        <h1 className="text-3xl font-bold">Bine ai venit pe blog!</h1>
+        <p>Primește notificări pe email despre cele mai noi articole.</p>
+        <SubscribeForm />
+      </main>
     </div>
   );
 }
