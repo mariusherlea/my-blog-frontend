@@ -49,7 +49,7 @@ export default async function ArticlePage({ params }: Props) {
             {comments.map((comment) => (
               <li
                 key={comment.id}
-                className="border p-4 rounded-md bg-green-300 shadow-sm"
+                className="border p-4 rounded-md shadow-sm"
               >
                 <div className="font-semibold text-blue-400">{comment.authorName}</div>
                 <p className="text-sm text-gray-700 mt-1">{comment.content}</p>
