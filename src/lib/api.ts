@@ -1,8 +1,9 @@
-//src/lib/api.ts
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:1337";
 
 export async function getArticles(page = 1, pageSize = 6) {
   const res = await fetch(
-    `http://localhost:1337/api/articles?populate=cover&pagination[page]=${page}&pagination[pageSize]=${pageSize}`
+    `${API_URL}/api/articles?populate=cover&pagination[page]=${page}&pagination[pageSize]=${pageSize}`,
+    { next: { revalidate: 60 } }
   );
   if (!res.ok) throw new Error("Eroare la preluarea articolelor");
   const data = await res.json();
@@ -21,21 +22,21 @@ export async function getArticles(page = 1, pageSize = 6) {
 }
 
 export async function getArticleBySlug(slug: string) {
-  const res = await fetch(`http://localhost:1337/api/articles?filters[slug][$eq]=${slug}&populate=*`);
+  const res = await fetch(`${API_URL}/api/articles?filters[slug][$eq]=${slug}&populate=*`);
   if (!res.ok) throw new Error("Eroare la preluarea articolului");
   return await res.json();
 }
 
 export async function getCommentsByArticle(slug: string) {
-  // const res = await fetch(`http://localhost:1337/api/comments?filters[article][slug][$eq]=${slug}&populate=*`);
-  const res = await fetch(`http://localhost:1337/api/comments?filters[article][slug][$eq]=${slug}&filters[approved][$eq]=true&populate=*`);
-  
+  const res = await fetch(
+    `${API_URL}/api/comments?filters[article][slug][$eq]=${slug}&filters[approved][$eq]=true&populate=*`
+  );
   if (!res.ok) throw new Error("Eroare la preluarea comentariilor");
   return await res.json();
 }
 
 export async function postComment(articleId: number, content: string, authorName: string) {
-  const res = await fetch("http://localhost:1337/api/comments", {
+  const res = await fetch(`${API_URL}/api/comments`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -55,9 +56,8 @@ export async function postComment(articleId: number, content: string, authorName
   return await res.json();
 }
 
-
 export async function getAllComments() {
-  const res = await fetch(`http://localhost:1337/api/comments?populate=article`);
+  const res = await fetch(`${API_URL}/api/comments?populate=article`);
   if (!res.ok) throw new Error("Eroare la preluarea comentariilor");
 
   const data = await res.json();
@@ -71,17 +71,12 @@ export async function getAllComments() {
   }));
 }
 
-
-
-// Aprobare comentariu
 export async function approveComment(id: number) {
-  const res = await fetch(`http://localhost:1337/api/comments/${id}`, {
+  const res = await fetch(`${API_URL}/api/comments/${id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      data: {
-        approved: true,
-      },
+      data: { approved: true },
     }),
   });
 
@@ -97,10 +92,8 @@ export async function approveComment(id: number) {
   return await res.json();
 }
 
-
-// Ștergere comentariu
 export async function deleteComment(id: number) {
-  const res = await fetch(`http://localhost:1337/api/comments/${id}`, {
+  const res = await fetch(`${API_URL}/api/comments/${id}`, {
     method: "DELETE",
   });
 
@@ -116,11 +109,8 @@ export async function deleteComment(id: number) {
   return await res.json();
 }
 
-
-
 export async function getUnapprovedComments() {
-  const res = await fetch("http://localhost:1337/api/comments?filters[approved][$eq]=false&populate=article");
+  const res = await fetch(`${API_URL}/api/comments?filters[approved][$eq]=false&populate=article`);
   if (!res.ok) throw new Error("Eroare la preluarea comentariilor neaprobate");
   return await res.json();
 }
-
