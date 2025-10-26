@@ -6,6 +6,7 @@ import ArticleContent from "../../components/ArticleContent";
 import CommentForm from "../../components/CommentForm";
 import SubscribeForm from "@/app/components/SubscribeForm";
 
+export const dynamic = "force-dynamic";
 // 👉 indicăm Next-ului că pagina poate fi generată dinamic
 export const dynamicParams = true;
 
