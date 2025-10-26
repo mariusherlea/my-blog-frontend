@@ -29,11 +29,18 @@ export async function getArticleBySlug(slug: string) {
 
 export async function getCommentsByArticle(slug: string) {
   const res = await fetch(
-    `${API_URL}/api/comments?filters[article][slug][$eq]=${slug}&filters[approved][$eq]=true&populate=*`
+    `${process.env.NEXT_PUBLIC_API_URL}/api/comments?filters[article][slug][$eq]=${slug}&filters[approved][$eq]=true&populate=*`,
+    { cache: "no-store" } // ca să vezi imediat schimbările
   );
-  if (!res.ok) throw new Error("Eroare la preluarea comentariilor");
-  return await res.json();
+
+  if (!res.ok) {
+    console.error("Eroare la fetch comments:", res.status);
+    return { data: [] };
+  }
+
+  return res.json();
 }
+
 
 export async function postComment(articleId: number, content: string, authorName: string) {
   const res = await fetch(`${API_URL}/api/comments`, {
