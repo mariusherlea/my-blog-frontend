@@ -2,15 +2,18 @@
 
 import { notFound } from "next/navigation";
 import { getArticleBySlug, getCommentsByArticle } from "@/lib/api";
-import ArticleContent from "../../components/ArticleContent"; // asigură-te că există
+import ArticleContent from "../../components/ArticleContent";
 import CommentForm from "../../components/CommentForm";
 import SubscribeForm from "@/app/components/SubscribeForm";
 
-type Props = {
-  params: { slug: string };
-};
+// ✅ Next.js 15.3 type check workaround
+export const dynamicParams = true;
 
-export default async function ArticlePage({ params }: Props) {
+export async function generateStaticParams() {
+  return [];
+}
+
+export default async function ArticlePage({ params }: { params: { slug: string } }) {
   const articleResponse = await getArticleBySlug(params.slug);
   const article = articleResponse?.data?.[0];
   if (!article) notFound();
@@ -47,10 +50,7 @@ export default async function ArticlePage({ params }: Props) {
         ) : (
           <ul className="space-y-4">
             {comments.map((comment) => (
-              <li
-                key={comment.id}
-                className="border p-4 rounded-md shadow-sm"
-              >
+              <li key={comment.id} className="border p-4 rounded-md shadow-sm">
                 <div className="font-semibold text-blue-400">{comment.authorName}</div>
                 <p className="text-sm text-gray-700 mt-1">{comment.content}</p>
                 <div className="text-xs text-gray-400 mt-2">
@@ -60,14 +60,14 @@ export default async function ArticlePage({ params }: Props) {
             ))}
           </ul>
         )}
-
         <CommentForm articleId={article.id} />
       </section>
-       <main className="space-y-8 p-6">
-      <h1 className="text-3xl font-bold">Bine ai venit pe blog!</h1>
-      <p>Primește notificări pe email despre cele mai noi articole.</p>
-      <SubscribeForm />
-    </main>
+
+      <main className="space-y-8 p-6">
+        <h1 className="text-3xl font-bold">Bine ai venit pe blog!</h1>
+        <p>Primește notificări pe email despre cele mai noi articole.</p>
+        <SubscribeForm />
+      </main>
     </article>
   );
 }

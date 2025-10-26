@@ -1,6 +1,6 @@
 // src/app/admin/comments/page.tsx
 import { getUnapprovedComments } from "@/lib/api";
-import ApproveButton from "@/app/components/ApproveButton";
+import {ApproveButton} from "@/app/components/ApproveButton";
 
 export default async function AdminCommentsPage() {
   const comments = await getUnapprovedComments();

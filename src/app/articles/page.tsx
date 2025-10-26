@@ -7,7 +7,7 @@ type Props = {
 };
 
 export default async function ArticlesPage({ searchParams }: Props) {
-  const currentPage = parseInt(searchParams?.page || "1", 10);
+  const currentPage = Number(searchParams?.page) || 1;
   const pageSize = 6;
 
   const { articles, pagination } = await getArticles(currentPage, pageSize);
@@ -25,7 +25,7 @@ export default async function ArticlesPage({ searchParams }: Props) {
           >
             {article.cover && (
               <img
-                src={`http://localhost:1337${article.cover.url}`}
+                src={`${process.env.NEXT_PUBLIC_STRAPI_URL}${article.cover.url}`}
                 alt={`Cover pentru ${article.title}`}
                 className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
               />
@@ -51,7 +51,7 @@ export default async function ArticlesPage({ searchParams }: Props) {
               </div>
             </div>
           </Link>
-        ))}{" "}
+        ))}
       </div>
 
       <PaginationControls
@@ -62,7 +62,7 @@ export default async function ArticlesPage({ searchParams }: Props) {
   );
 }
 
-// Controale simple pentru paginare:
+// --- Componentă simplă pentru butoanele de paginare
 function PaginationControls({
   currentPage,
   totalPages,
