@@ -10,7 +10,7 @@ export async function GET() {
     <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
       ${articles
         .map(
-          (article) => `
+          (article:any) => `
         <url>
           <loc>${baseUrl}/articles/${article.slug}</loc>
           <lastmod>${new Date(article.publishedAt).toISOString()}</lastmod>

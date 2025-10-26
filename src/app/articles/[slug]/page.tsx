@@ -6,19 +6,29 @@ import ArticleContent from "../../components/ArticleContent";
 import CommentForm from "../../components/CommentForm";
 import SubscribeForm from "@/app/components/SubscribeForm";
 
-// ✅ Next.js 15.3 type check workaround
+// 👉 indicăm Next-ului că pagina poate fi generată dinamic
 export const dynamicParams = true;
 
 export async function generateStaticParams() {
+  // dacă nu vrei să pregenerezi articole, poți lăsa lista goală
   return [];
 }
 
-export default async function ArticlePage({ params }: { params: { slug: string } }) {
-  const articleResponse = await getArticleBySlug(params.slug);
+type ArticlePageProps = {
+  params: Promise<{ slug: string }>;
+};
+
+export default async function ArticlePage({ params }: ArticlePageProps) {
+  // ⚡ Next 15.3 tipurile stricte cer să aștepți `params`
+  const { slug } = await params;
+
+  // 🔹 obținem articolul după slug
+  const articleResponse = await getArticleBySlug(slug);
   const article = articleResponse?.data?.[0];
   if (!article) notFound();
 
-  const commentsResponse = await getCommentsByArticle(params.slug);
+  // 🔹 obținem comentariile
+  const commentsResponse = await getCommentsByArticle(slug);
   const comments = commentsResponse?.data || [];
 
   return (
@@ -35,7 +45,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
 
       {article.cover && (
         <img
-          src={`http://localhost:1337${article.cover.url}`}
+          src={`${process.env.NEXT_PUBLIC_STRAPI_URL}${article.cover.url}`}
           alt={`Cover pentru ${article.title}`}
           className="w-full max-h-96 object-cover rounded-lg mb-8"
         />
@@ -49,9 +59,11 @@ export default async function ArticlePage({ params }: { params: { slug: string }
           <p className="text-gray-500">Nu există comentarii încă.</p>
         ) : (
           <ul className="space-y-4">
-            {comments.map((comment) => (
+            {comments.map((comment: any) => (
               <li key={comment.id} className="border p-4 rounded-md shadow-sm">
-                <div className="font-semibold text-blue-400">{comment.authorName}</div>
+                <div className="font-semibold text-blue-400">
+                  {comment.authorName}
+                </div>
                 <p className="text-sm text-gray-700 mt-1">{comment.content}</p>
                 <div className="text-xs text-gray-400 mt-2">
                   {new Date(comment.createdAt).toLocaleString("ro-RO")}
@@ -60,6 +72,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
             ))}
           </ul>
         )}
+
         <CommentForm articleId={article.id} />
       </section>
 
@@ -71,3 +84,4 @@ export default async function ArticlePage({ params }: { params: { slug: string }
     </article>
   );
 }
+
