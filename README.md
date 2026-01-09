@@ -27,3 +27,8 @@ TypeScript
 Tailwind CSS
 
 REST API
+⚙️ Setup
+git clone https://github.com/mariusherlea/my-blog-frontend.git
+cd my-blog-frontend
+npm install
+npm run dev
