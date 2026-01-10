@@ -5,6 +5,7 @@ import { getArticleBySlug, getCommentsByArticle } from "@/lib/api";
 import ArticleContent from "../../components/ArticleContent";
 import CommentForm from "../../components/CommentForm";
 import SubscribeForm from "@/app/components/SubscribeForm";
+import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 // 👉 indicăm Next-ului că pagina poate fi generată dinamic
@@ -33,7 +34,18 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
   const comments = commentsResponse?.data || [];
 
   return (
+
+
+    
     <article className="max-w-3xl mx-auto px-4 py-8">
+
+<Link
+  href="/"
+  className="inline-flex items-center text-sm text-blue-600 hover:underline mb-6"
+>
+  ← Înapoi acasă
+</Link>
+
       <h1 className="text-4xl font-bold mb-4">{article.title}</h1>
       <p className="text-gray-500 mb-6">
         Publicat la:{" "}
