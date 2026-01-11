@@ -1,4 +1,6 @@
 // src/app/admin/comments/page.tsx
+export const dynamic = "force-dynamic";
+
 import { getUnapprovedComments } from "@/lib/api";
 import { ApproveButton } from "@/app/components/ApproveButton";
 
