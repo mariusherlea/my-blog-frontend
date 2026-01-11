@@ -83,7 +83,7 @@ function PaginationControls({
         </Link>
       )}
       <span className="px-4 py-2 border rounded bg-blue-100 font-semibold">
-        Pagina {currentPage} din {totalPages}
+        Page {currentPage} din {totalPages}
       </span>
       {currentPage < totalPages && (
         <Link
