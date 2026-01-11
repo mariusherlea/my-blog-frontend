@@ -46,12 +46,12 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
   href="/"
   className="inline-flex items-center text-sm text-blue-600 hover:underline mb-6"
 >
-  ← Înapoi acasă
+  ← Back
 </Link>
 
       <h1 className="text-4xl font-bold mb-4">{article.title}</h1>
       <p className="text-gray-500 mb-6">
-        Publicat la:{" "}
+        Published at:{" "}
         {new Date(article.publishedAt).toLocaleDateString("ro-RO", {
           year: "numeric",
           month: "long",
@@ -70,9 +70,9 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
       <ArticleContent content={article.content} />
 
       <section className="mt-12">
-        <h2 className="text-2xl font-semibold mb-4">Comentarii</h2>
+        <h2 className="text-2xl font-semibold mb-4">Comments</h2>
         {comments.length === 0 ? (
-          <p className="text-gray-500">Nu există comentarii încă.</p>
+          <p className="text-gray-500">Not comments yet.</p>
         ) : (
           <ul className="space-y-4">
             {comments.map((comment: any) => (

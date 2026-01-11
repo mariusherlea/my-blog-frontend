@@ -11,10 +11,10 @@ export default async function AdminCommentsPage() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">Comentarii neaprobate</h1>
+      <h1 className="text-3xl font-bold mb-6">Comments unaproved</h1>
 
       {comments.length === 0 ? (
-        <p className="text-gray-600">Toate comentariile sunt aprobate 🎉</p>
+        <p className="text-gray-600">All comments are aproved 🎉</p>
       ) : (
         <ul className="space-y-4">
           {comments.map((comment: any) => (
