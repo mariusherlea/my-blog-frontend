@@ -1,3 +1,4 @@
+//src/lib/api.ts
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:1337";
 
 export async function getArticles(page = 1, pageSize = 6) {
