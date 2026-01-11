@@ -13,13 +13,9 @@ type ParagraphBlock = {
   children: TextChild[];
 };
 
-type Heading1Block = {
-  type: "heading1";
-  children: TextChild[];
-};
-
-type Heading2Block = {
-  type: "heading2";
+type HeadingBlock = {
+  type: "heading";
+  level: 1 | 2 | 3 | 4 | 5 | 6;
   children: TextChild[];
 };
 
@@ -29,7 +25,7 @@ type ImageBlock = {
   alt?: string;
 };
 
-type Block = ParagraphBlock | Heading1Block | Heading2Block | ImageBlock;
+type Block = ParagraphBlock | HeadingBlock | ImageBlock;
 
 type ArticleContentProps = {
   content: Block[];
@@ -49,6 +45,7 @@ export function ArticleContent({ content }: ArticleContentProps) {
   return (
     <div>
       {content.map((block, idx) => {
+        console.log("Block:", block);
         if ("children" in block) {
           const children = block.children.map((child, i) => (
             <TextFragment key={i} child={child} />
@@ -57,10 +54,21 @@ export function ArticleContent({ content }: ArticleContentProps) {
           switch (block.type) {
             case "paragraph":
               return <p key={idx}>{children}</p>;
-            case "heading1":
-              return <h1 key={idx}>{children}</h1>;
-            case "heading2":
-              return <h2 key={idx}>{children}</h2>;
+
+            case "heading":
+              switch (block.level) {
+                case 1:
+                  return <h1 key={idx}>{children}</h1>;
+                case 2:
+                  return <h2 key={idx}>{children}</h2>;
+                case 3:
+                  return <h3 key={idx}>{children}</h3>;
+                case 4:
+                  return <h4 key={idx}>{children}</h4>;
+                default:
+                  return <p key={idx}>{children}</p>;
+              }
+
             default:
               return null;
           }

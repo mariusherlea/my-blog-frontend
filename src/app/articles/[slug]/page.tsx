@@ -29,6 +29,9 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
   const article = articleResponse?.data?.[0];
   if (!article) notFound();
 
+  // console.log("ARTICLE RAW:", JSON.stringify(article, null, 2));
+// console.log("ARTICLE.CONTENT:", JSON.stringify(article.content, null, 2));
+
   // 🔹 obținem comentariile
   const commentsResponse = await getCommentsByArticle(slug);
   const comments = commentsResponse?.data || [];
