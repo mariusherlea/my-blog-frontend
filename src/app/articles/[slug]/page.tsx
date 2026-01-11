@@ -6,6 +6,7 @@ import ArticleContent from "../../components/ArticleContent";
 import CommentForm from "../../components/CommentForm";
 // import SubscribeForm from "@/app/components/SubscribeForm";
 import Link from "next/link";
+import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
 // 👉 indicăm Next-ului că pagina poate fi generată dinamic
@@ -19,6 +20,29 @@ export async function generateStaticParams() {
 type ArticlePageProps = {
   params: Promise<{ slug: string }>;
 };
+
+/* ---------------- METADATA ---------------- */
+export async function generateMetadata(
+  { params }: { params: Promise<{ slug: string }> }
+): Promise<Metadata> {
+  const { slug } = await params;
+
+  const articleResponse = await getArticleBySlug(slug);
+  const article = articleResponse?.data?.[0];
+
+  if (!article) {
+    return {
+      title: "Article not found",
+      description: "The requested article does not exist.",
+    };
+  }
+
+  return {
+    title: article.title,
+    description: article.excerpt ?? article.title,
+  };
+}
+
 
 export default async function ArticlePage({ params }: ArticlePageProps) {
   // ⚡ Next 15.3 tipurile stricte cer să aștepți `params`
