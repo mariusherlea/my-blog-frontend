@@ -2,7 +2,7 @@
 import { getArticles } from "@/lib/api";
 import Link from "next/link";
 import PaginationControls from "@/app/components/PaginationControls";
-import SubscribeForm from "./components/SubscribeForm";
+// import SubscribeForm from "./components/SubscribeForm";
 
 export default async function ArticlesPage(props: {
   searchParams: Promise<{ page?: string }>;
@@ -25,7 +25,7 @@ export default async function ArticlesPage(props: {
           <Link
             key={article.id}
             href={`/articles/${article.slug}`}
-            className="group block border rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 bg-white"
+            className="group block border rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 bg-blue-400"
           >
             {article.cover && (
               <img
@@ -62,11 +62,11 @@ export default async function ArticlesPage(props: {
         currentPage={pagination.page}
         totalPages={pagination.pageCount}
       />
-      <main className="space-y-8 p-6">
+      {/* <main className="space-y-8 p-6">
         <h1 className="text-3xl font-bold">Bine ai venit pe blog!</h1>
         <p>Primește notificări pe email despre cele mai noi articole.</p>
         <SubscribeForm />
-      </main>
+      </main> */}
     </div>
   );
 }

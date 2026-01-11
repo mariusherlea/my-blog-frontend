@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { getArticleBySlug, getCommentsByArticle } from "@/lib/api";
 import ArticleContent from "../../components/ArticleContent";
 import CommentForm from "../../components/CommentForm";
-import SubscribeForm from "@/app/components/SubscribeForm";
+// import SubscribeForm from "@/app/components/SubscribeForm";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
@@ -89,11 +89,11 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
         <CommentForm articleId={article.id} />
       </section>
 
-      <main className="space-y-8 p-6">
+      {/* <main className="space-y-8 p-6">
         <h1 className="text-3xl font-bold">Bine ai venit pe blog!</h1>
         <p>Primește notificări pe email despre cele mai noi articole.</p>
         <SubscribeForm />
-      </main>
+      </main> */}
     </article>
   );
 }
