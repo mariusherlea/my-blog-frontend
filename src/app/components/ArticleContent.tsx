@@ -1,4 +1,5 @@
 // src/components/ArticleContent.tsx
+// src/components/ArticleContent.tsx
 
 type TextChild = {
   type: "text";
@@ -12,7 +13,7 @@ type ParagraphBlock = {
 
 type HeadingBlock = {
   type: "heading";
-  level: number;
+  level: 2 | 3;
   children: TextChild[];
 };
 
@@ -43,77 +44,108 @@ type ArticleContentProps = {
   content: ContentBlock[];
 };
 
+/* ---------------- HELPERS ---------------- */
+
+function getText(children: TextChild[]) {
+  return children.map(c => c.text).join("");
+}
+
+function slugify(text: string) {
+  return text
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, "")
+    .replace(/\s+/g, "-");
+}
+
+/* ---------------- COMPONENT ---------------- */
+
 export default function ArticleContent({ content }: ArticleContentProps) {
   return (
-    <>
+    <div className="max-w-none text-lg leading-relaxed">
       {content.map((block, i) => {
-        /* ---------------- PARAGRAPH ---------------- */
-        if (block.type === "paragraph") {
-          return (
-            <p key={i} className="mb-4 text-lg leading-relaxed">
-              {block.children.map((c) => c.text).join("")}
-            </p>
-          );
-        }
+        switch (block.type) {
+          /* ---------- PARAGRAPH ---------- */
+          case "paragraph":
+            return (
+              <p key={i} className="mb-6">
+                {getText(block.children)}
+              </p>
+            );
 
-        /* ---------------- HEADING ---------------- */
-        if (block.type === "heading") {
-          const text = block.children.map((c) => c.text).join("");
+          /* ---------- HEADING ---------- */
+          case "heading": {
+            const text = getText(block.children);
+            const id = slugify(text);
 
-          switch (block.level) {
-            case 2:
+            if (block.level === 2) {
               return (
-                <h2 key={i} className="text-3xl font-semibold mb-5">
+                <h2
+                  key={i}
+                  id={id}
+                  className="text-3xl font-semibold mt-12 mb-5"
+                >
                   {text}
                 </h2>
               );
-            case 3:
+            }
+
+            if (block.level === 3) {
               return (
-                <h3 key={i} className="text-2xl font-semibold mb-4">
+                <h3
+                  key={i}
+                  id={id}
+                  className="text-2xl font-semibold mt-8 mb-4"
+                >
                   {text}
                 </h3>
               );
-            default:
-              return null;
+            }
+
+            return null;
           }
+
+          /* ---------- LIST ---------- */
+          case "list": {
+            const ListTag = block.format === "ordered" ? "ol" : "ul";
+
+            return (
+              <ListTag
+                key={i}
+                className={`mb-6 ml-6 space-y-2 ${
+                  block.format === "ordered"
+                    ? "list-decimal"
+                    : "list-disc"
+                }`}
+              >
+                {block.children.map((item, idx) => (
+                  <li key={idx}>
+                    {getText(item.children)}
+                  </li>
+                ))}
+              </ListTag>
+            );
+          }
+
+          /* ---------- CODE ---------- */
+          case "code":
+            return (
+              <pre
+                key={i}
+                className="mb-6 rounded-lg bg-zinc-900 p-4 overflow-x-auto"
+              >
+                <code className="font-mono text-sm text-zinc-100 leading-relaxed">
+                  {getText(block.children)}
+                </code>
+              </pre>
+            );
+
+          default:
+            return null;
         }
-
-        /* ---------------- LIST ---------------- */
-        if (block.type === "list") {
-          const ListTag = block.format === "ordered" ? "ol" : "ul";
-
-          return (
-            <ListTag
-              key={i}
-              className="mb-6 ml-6 list-disc space-y-2"
-            >
-              {block.children.map((item, idx) => (
-                <li key={idx}>
-                  {item.children.map((c) => c.text).join("")}
-                </li>
-              ))}
-            </ListTag>
-          );
-        }
-
-        /* ---------------- CODE ---------------- */
-        if (block.type === "code") {
-          const code = block.children.map((c) => c.text).join("");
-
-          return (
-            <pre
-              key={i}
-              className="mb-6 rounded-lg bg-zinc-900 p-4 overflow-x-auto text-sm text-zinc-100"
-            >
-              <code className="font-mono leading-relaxed">
-                {code}
-              </code>
-            </pre>
-          );
-        }
-
-        return null;
       })}
-    </>
+    </div>
   );
 }
+
+

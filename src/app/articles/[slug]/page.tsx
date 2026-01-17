@@ -7,6 +7,7 @@ import CommentForm from "../../components/CommentForm";
 // import SubscribeForm from "@/app/components/SubscribeForm";
 import Link from "next/link";
 import type { Metadata } from "next";
+import TableOfContents from "@/app/components/TableOfContents";
 
 export const dynamic = "force-dynamic";
 // 👉 indicăm Next-ului că pagina poate fi generată dinamic
@@ -56,6 +57,27 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
   // console.log("ARTICLE RAW:", JSON.stringify(article, null, 2));
 // console.log("ARTICLE.CONTENT:", JSON.stringify(article.content, null, 2));
 
+const toc = article.content
+  .filter(
+    (block: any) =>
+      block.type === "heading" && (block.level === 2 || block.level === 3)
+  )
+  .map((block: any) => {
+    const text = block.children.map((c: any) => c.text).join("");
+    const id = text
+      .toLowerCase()
+      .replace(/[^\w\s-]/g, "")
+      .replace(/\s+/g, "-");
+
+    return {
+      id,
+      text,
+      level: block.level,
+    };
+  });
+
+  console.log(article.title);
+
   // 🔹 obținem comentariile
   const commentsResponse = await getCommentsByArticle(slug);
   const comments = commentsResponse?.data || [];
@@ -91,7 +113,10 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
         />
       )}
 
-      <ArticleContent content={article.content} />
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_260px] gap-12">
+  <ArticleContent content={article.content} />
+  <TableOfContents items={toc} />
+</div>
 
       <section className="mt-12">
         <h2 className="text-2xl font-semibold mb-4">Comments</h2>
