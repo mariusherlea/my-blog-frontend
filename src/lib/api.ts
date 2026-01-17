@@ -122,3 +122,15 @@ export async function getUnapprovedComments() {
   if (!res.ok) throw new Error("Eroare la preluarea comentariilor neaprobate");
   return await res.json();
 }
+
+export async function getAllArticles() {
+  const res = await fetch(
+    `${API_URL}/api/articles?fields=slug,updatedAt`
+  );
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch articles for sitemap");
+  }
+
+  return res.json();
+}
