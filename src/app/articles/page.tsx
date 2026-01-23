@@ -32,8 +32,8 @@ export default async function ArticlePage({ searchParams }: ArticleListPageProps
           >
 {article.cover && (
   <img
-    src={article.cover}
-    alt={article.title}
+    src={getMediaUrl(article.cover.url)}
+    alt={`Cover pentru ${article.title}`}
     className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
   />
 )}
