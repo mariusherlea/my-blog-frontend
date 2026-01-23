@@ -15,7 +15,7 @@ export async function getArticles(page = 1, pageSize = 6) {
       title: item.title,
       slug: item.slug,
       excerpt: item.excerpt,
-      cover: item.cover?.data?.attributes?.url || null,
+      cover: item.cover?.data?.url || null,
       publishedAt: item.publishedAt || item.createdAt,
     })),
     pagination: data.meta.pagination,
