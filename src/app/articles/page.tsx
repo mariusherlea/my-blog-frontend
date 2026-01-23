@@ -1,3 +1,4 @@
+//src/app/articles/page.tsx
 import Link from "next/link";
 import { getArticles } from "@/lib/api";
 import { getMediaUrl } from "@/lib/media";
@@ -29,13 +30,16 @@ export default async function ArticlePage({ searchParams }: ArticleListPageProps
             href={`/articles/${article.slug}`}
             className="group block border rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 bg-white"
           >
-       {article.cover && (
+      
+{article.cover?.data?.attributes?.url && (
   <img
-    src={getMediaUrl(article.cover.url)}
+    src={getMediaUrl(article.cover.data.attributes.url)}
     alt={article.title}
     className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
   />
 )}
+
+
             <div className="p-4 flex flex-col justify-between h-full">
               <h2 className="text-xl font-semibold group-hover:text-blue-600 transition-colors duration-200 mb-2">
                 {article.title}
