@@ -8,6 +8,7 @@ import CommentForm from "../../components/CommentForm";
 import Link from "next/link";
 import type { Metadata } from "next";
 import TableOfContents from "@/app/components/TableOfContents";
+import { getMediaUrl } from "@/lib/media";
 
 export const dynamic = "force-dynamic";
 // 👉 indicăm Next-ului că pagina poate fi generată dinamic
@@ -77,6 +78,7 @@ const toc = article.content
   });
 
   console.log(article.title);
+  console.log(article.cover.url);
 
   // 🔹 obținem comentariile
   const commentsResponse = await getCommentsByArticle(slug);
@@ -106,12 +108,12 @@ const toc = article.content
       </p>
 
       {article.cover && (
-        <img
-          src={`${process.env.NEXT_PUBLIC_STRAPI_URL}${article.cover.url}`}
-          alt={`Cover pentru ${article.title}`}
-          className="w-full max-h-96 object-cover rounded-lg mb-8"
-        />
-      )}
+  <img
+    src={getMediaUrl(article.cover.url)}
+    alt={`Cover pentru ${article.title}`}
+    className="w-full max-h-96 object-cover rounded-lg mb-8"
+  />
+)}
 
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_260px] gap-12">
   <ArticleContent content={article.content} />
