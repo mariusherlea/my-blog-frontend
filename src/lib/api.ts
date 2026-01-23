@@ -9,17 +9,17 @@ export async function getArticles(page = 1, pageSize = 6) {
   if (!res.ok) throw new Error("Eroare la preluarea articolelor");
   const data = await res.json();
 
-  return {
-    articles: data.data.map((item: any) => ({
-      id: item.id,
-      title: item.title,
-      slug: item.slug,
-      excerpt: item.excerpt,
-      cover: item.cover?.data?.url || null,
-      publishedAt: item.publishedAt || item.createdAt,
-    })),
-    pagination: data.meta.pagination,
-  };
+ return {
+  articles: data.data.map((item: any) => ({
+    id: item.id,
+    title: item.title,
+    slug: item.slug,
+    excerpt: item.excerpt,
+    cover: item.cover?.data?.attributes?.url || null, // 👈 CORECT
+    publishedAt: item.publishedAt || item.createdAt,
+  })),
+  pagination: data.meta.pagination,
+};
 }
 
 export async function getArticleBySlug(slug: string) {
