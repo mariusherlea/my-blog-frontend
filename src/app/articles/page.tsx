@@ -31,14 +31,14 @@ export default async function ArticlePage({ searchParams }: ArticleListPageProps
   className="group block border rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 bg-white"
 >
   <div>
-    {/* {article.cover && (
+    {article.cover && (
       <img
         src={article.cover}
         alt={article.title}
         className="w-full h-48 object-cover border-4 border-red-500"
       />
-    )} */}
-<img alt="Cover pentru 🚀 How I Built a Scalable Blog with Next.js 15 and Strapi v5 (Step by Step)" class="w-full max-h-96 object-cover rounded-lg mb-8" src="https://res.cloudinary.com/dyjycltyk/image/upload/v1768741068/cover_how_i_build_a_scalable_blog_b1129be2ce.png"></img>
+    )}
+
     <div className="p-4 flex flex-col justify-between h-full">
       <h2 className="text-xl font-semibold group-hover:text-blue-600 mb-2">
         {article.title}
