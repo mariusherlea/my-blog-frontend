@@ -34,15 +34,19 @@ export default async function ArticlePage({ searchParams }: ArticleListPageProps
             <pre className="text-xs text-white bg-red-600 p-2 mb-2">
   {JSON.stringify(article.cover, null, 2)}
 </pre>
-{article.cover && (
+{/* {article.cover && (
  <img
   src={article.cover}
   alt={article.title}
   className="w-full h-48 object-cover border-4 border-red-500"
 />
-)}
+)} */}
 
-
+<img
+  src="https://res.cloudinary.com/dyjycltyk/image/upload/sample.jpg"
+  alt="test"
+  className="w-full h-48 object-cover border-4 border-red-500"
+/>
             <div className="p-4 flex flex-col justify-between h-full">
               <h2 className="text-xl font-semibold group-hover:text-blue-600 transition-colors duration-200 mb-2">
                 {article.title}
