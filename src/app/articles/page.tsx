@@ -26,46 +26,27 @@ export default async function ArticlePage({ searchParams }: ArticleListPageProps
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {articles.map((article: any) => (
           <Link
-            key={article.id}
-            href={`/articles/${article.slug}`}
-            className="group block border rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 bg-white"
-          >
+  key={article.id}
+  href={`/articles/${article.slug}`}
+  className="group block border rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 bg-white"
+>
+  <div>
+    {article.cover && (
+      <img
+        src={article.cover}
+        alt={article.title}
+        className="w-full h-48 object-cover border-4 border-red-500"
+      />
+    )}
 
-            <pre className="text-xs text-white bg-red-600 p-2 mb-2">
-  {JSON.stringify(article.cover, null, 2)}
-</pre>
-{/* {article.cover && (
- <img
-  src={article.cover}
-  alt={article.title}
-  className="w-full h-48 object-cover border-4 border-red-500"
-/>
-)} */}
-
-<img
-  src="https://res.cloudinary.com/dyjycltyk/image/upload/sample.jpg"
-  alt="test"
-  className="w-full h-48 object-cover border-4 border-red-500"
-/>
-            <div className="p-4 flex flex-col justify-between h-full">
-              <h2 className="text-xl font-semibold group-hover:text-blue-600 transition-colors duration-200 mb-2">
-                {article.title}
-              </h2>
-              <p className="text-gray-600 text-sm mb-3">{article.excerpt}</p>
-              <div className="mt-auto flex justify-between items-center">
-                <p className="text-xs text-gray-500">
-                  {new Date(article.publishedAt).toLocaleDateString("ro-RO", {
-                    day: "2-digit",
-                    month: "long",
-                    year: "numeric",
-                  })}
-                </p>
-                <span className="text-sm text-blue-600 font-medium hover:underline">
-                  Citește mai mult →
-                </span>
-              </div>
-            </div>
-          </Link>
+    <div className="p-4 flex flex-col justify-between h-full">
+      <h2 className="text-xl font-semibold group-hover:text-blue-600 mb-2">
+        {article.title}
+      </h2>
+      <p className="text-gray-600 text-sm mb-3">{article.excerpt}</p>
+    </div>
+  </div>
+</Link>
         ))}
       </div>
 
