@@ -31,11 +31,11 @@ export default async function ArticlePage({ searchParams }: ArticleListPageProps
             className="group block border rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 bg-white"
           >
 {article.cover && (
-  <img
-    src={article.cover}
-    alt={article.title}
-    className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-  />
+ <img
+  src={article.cover}
+  alt={article.title}
+  className="w-full h-48 object-cover border-4 border-red-500"
+/>
 )}
 
 
