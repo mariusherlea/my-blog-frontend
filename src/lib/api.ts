@@ -2,13 +2,14 @@
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:1337";
 
 export async function getArticles(page = 1, pageSize = 6) {
-  // const res = await fetch(
-  //   `${API_URL}/api/articles?populate=cover&pagination[page]=${page}&pagination[pageSize]=${pageSize}`,
-  //   { next: { revalidate: 60 } }
-  // );
+ 
   const res = await fetch(
   `${API_URL}/api/articles` +
-    `?populate=cover` +
+    `?fields[0]=title` +
+    `&fields[1]=slug` +
+    `&fields[2]=excerpt` +
+    `&fields[3]=publishedAt` +
+    `&populate[cover][fields][0]=url` +
     `&pagination[page]=${page}` +
     `&pagination[pageSize]=${pageSize}`,
   {
@@ -20,13 +21,13 @@ export async function getArticles(page = 1, pageSize = 6) {
 
  return {
   articles: data.data.map((item: any) => ({
-    id: item.id,
-    title: item.title,
-    slug: item.slug,
-    excerpt: item.excerpt,
-   cover: item.attributes?.cover?.data?.attributes?.url || null,
-    publishedAt: item.publishedAt || item.createdAt,
-  })),
+  id: item.id,
+  title: item.title,
+  slug: item.slug,
+  excerpt: item.excerpt,
+  cover: item.cover?.url ?? null,   // ✅ AICI ERA TOT
+  publishedAt: item.publishedAt,
+})),
   pagination: data.meta.pagination,
 };
 }

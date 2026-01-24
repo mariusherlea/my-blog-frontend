@@ -1,7 +1,7 @@
 //src/app/articles/page.tsx
 import Link from "next/link";
 import { getArticles } from "@/lib/api";
-import { getMediaUrl } from "@/lib/media";
+
 
 export const dynamicParams = true;
 export async function generateStaticParams() {
