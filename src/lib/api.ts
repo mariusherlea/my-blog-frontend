@@ -24,7 +24,7 @@ export async function getArticles(page = 1, pageSize = 6) {
     title: item.title,
     slug: item.slug,
     excerpt: item.excerpt,
-    cover: item.cover?.data?.attributes?.url || null, // 👈 CORECT
+   cover: item.attributes?.cover?.data?.attributes?.url || null,
     publishedAt: item.publishedAt || item.createdAt,
   })),
   pagination: data.meta.pagination,
