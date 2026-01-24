@@ -2,10 +2,19 @@
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:1337";
 
 export async function getArticles(page = 1, pageSize = 6) {
+  // const res = await fetch(
+  //   `${API_URL}/api/articles?populate=cover&pagination[page]=${page}&pagination[pageSize]=${pageSize}`,
+  //   { next: { revalidate: 60 } }
+  // );
   const res = await fetch(
-    `${API_URL}/api/articles?populate=cover&pagination[page]=${page}&pagination[pageSize]=${pageSize}`,
-    { next: { revalidate: 60 } }
-  );
+  `${API_URL}/api/articles` +
+    `?populate=cover` +
+    `&pagination[page]=${page}` +
+    `&pagination[pageSize]=${pageSize}`,
+  {
+    cache: "no-store",
+  }
+);
   if (!res.ok) throw new Error("Eroare la preluarea articolelor");
   const data = await res.json();
 
