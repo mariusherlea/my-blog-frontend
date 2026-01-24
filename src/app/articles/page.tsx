@@ -30,6 +30,10 @@ export default async function ArticlePage({ searchParams }: ArticleListPageProps
             href={`/articles/${article.slug}`}
             className="group block border rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 bg-white"
           >
+
+            <pre className="text-xs text-white bg-red-600 p-2 mb-2">
+  {JSON.stringify(article.cover, null, 2)}
+</pre>
 {article.cover && (
  <img
   src={article.cover}
