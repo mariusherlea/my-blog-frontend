@@ -43,7 +43,7 @@ export default async function ArticlePage({ searchParams }: ArticleListPageProps
       <h2 className="text-xl font-semibold group-hover:text-blue-600 mb-2">
         {article.title}
       </h2>
-      <p className="text-gray-600 text-sm mb-3">{article.excerpt}</p>
+      <p className="text-yellow-600 text-sm mb-3">{article.excerpt}</p>
     </div>
   </div>
 </Link>

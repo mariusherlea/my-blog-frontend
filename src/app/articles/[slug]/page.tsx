@@ -132,7 +132,7 @@ const toc = article.content
                   {comment.authorName}
                 </div>
                 <p className="text-sm text-gray-700 mt-1">{comment.content}</p>
-                <div className="text-xs text-gray-400 mt-2">
+                <div className="text-xs text-green-400 mt-2">
                   {new Date(comment.createdAt).toLocaleString("ro-RO")}
                 </div>
               </li>
